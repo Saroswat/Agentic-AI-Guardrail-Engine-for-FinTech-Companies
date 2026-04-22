@@ -1,0 +1,10 @@
+.venv
+__pycache__
+*.pyc
+.pytest_cache
+build
+dist
+app/tests
+agentic_guardrail.db
+audit_exports
+

@@ -1,0 +1,15 @@
+.next
+node_modules
+.venv
+__pycache__
+*.pyc
+.pytest_cache
+.mypy_cache
+.ruff_cache
+backend/agentic_guardrail.db
+backend/audit_exports
+backend/build
+backend/dist
+frontend/.next
+frontend/out
+.env
