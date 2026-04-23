@@ -151,6 +151,129 @@ github-web-release/
 - contradictory recommendation
 - borderline case with human override
 
+## Clone And Run From Terminal
+
+Repository URL:
+
+```text
+https://github.com/Saroswat/Agentic-Guardrail-Engine-for-FinTech-Companies.git
+```
+
+### Prerequisites
+
+- Git
+- Node.js LTS with npm
+- Python 3.11 or newer
+
+### Windows Setup And Run
+
+#### 1. Install required tools
+
+```powershell
+winget install --id Git.Git -e --source winget
+winget install --id OpenJS.NodeJS.LTS -e --source winget
+winget install --id Python.Python.3.12 -e --source winget
+```
+
+If PowerShell blocks `npm`, use `npm.cmd` in the commands below.
+
+#### 2. Clone the repository
+
+```powershell
+git clone https://github.com/Saroswat/Agentic-Guardrail-Engine-for-FinTech-Companies.git
+cd Agentic-Guardrail-Engine-for-FinTech-Companies
+```
+
+#### 3. Start the backend
+
+Open terminal 1:
+
+```powershell
+cd backend
+python -m venv .venv
+.\.venv\Scripts\python.exe -m pip install --upgrade pip
+.\.venv\Scripts\python.exe -m pip install -r requirements.txt
+Copy-Item .env.example .env -Force
+.\.venv\Scripts\python.exe run_backend.py
+```
+
+#### 4. Start the frontend
+
+Open terminal 2:
+
+```powershell
+cd frontend
+Copy-Item .env.example .env.local -Force
+npm.cmd install
+npm.cmd run dev
+```
+
+Open in browser:
+
+- `http://localhost:3000`
+- `http://localhost:8000/health`
+
+### macOS Setup And Run
+
+#### 1. Install required tools
+
+If Homebrew is not installed:
+
+```bash
+/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+```
+
+Then install the required packages:
+
+```bash
+brew install git node python@3.12
+```
+
+#### 2. Clone the repository
+
+```bash
+git clone https://github.com/Saroswat/Agentic-Guardrail-Engine-for-FinTech-Companies.git
+cd Agentic-Guardrail-Engine-for-FinTech-Companies
+```
+
+#### 3. Start the backend
+
+Open terminal 1:
+
+```bash
+cd backend
+python3 -m venv .venv
+source .venv/bin/activate
+python -m pip install --upgrade pip
+python -m pip install -r requirements.txt
+cp .env.example .env
+python run_backend.py
+```
+
+#### 4. Start the frontend
+
+Open terminal 2:
+
+```bash
+cd frontend
+cp .env.example .env.local
+npm install
+npm run dev
+```
+
+Open in browser:
+
+- `http://localhost:3000`
+- `http://localhost:8000/health`
+
+### One-Time Docker Alternative
+
+If Docker Desktop is already installed, you can run the full web stack with one command after cloning:
+
+```bash
+docker compose up --build
+```
+
 ## Local Run
 
 ### Backend
@@ -278,4 +401,3 @@ NEXT_PUBLIC_API_BASE_URL=https://agentic-guardrail-backend.up.railway.app
 - governed LLM explanation adapters
 - LangGraph-style orchestration
 - observability and tracing
-
