@@ -1,4 +1,4 @@
-# Agentic Guardrail Engine for Financial AI
+# Agentic-AI-Guardrail-Engine-for-FinTech-Companies
 ## Governed Agentic AI Decision Control Platform
 
 A recruiter-grade full-stack web application that demonstrates how agentic AI can be used in financial workflows under deterministic governance, policy controls, explainability, auditability, and human oversight.
