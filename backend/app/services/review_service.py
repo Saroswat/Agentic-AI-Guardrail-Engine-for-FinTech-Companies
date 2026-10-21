@@ -38,6 +38,8 @@ def apply_review_decision(db: Session, review_id: int, payload: ReviewDecisionRe
     )
     if review is None:
         raise ValueError("Pending review not found.")
+    if review.review_status != "pending":
+        raise ValueError("This review has already been completed.")
 
     case = review.case
     review.review_status = "completed"

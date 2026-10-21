@@ -1,23 +1,61 @@
 services:
+  db:
+    image: postgres:17-alpine
+    environment:
+      POSTGRES_DB: guardrail
+      POSTGRES_USER: guardrail
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?Set POSTGRES_PASSWORD in .env}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U guardrail -d guardrail"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
   backend:
     build:
       context: ./backend
       dockerfile: Dockerfile
-    environment:
-      APP_ENV: development
-      DATABASE_URL: sqlite:///./agentic_guardrail.db
+    environment: &backend_env
+      APP_ENV: ${APP_ENV:-development}
+      DATABASE_URL: postgresql+psycopg://guardrail:${POSTGRES_PASSWORD}@db:5432/guardrail
+      BOOTSTRAP_PASSWORD: ${BOOTSTRAP_PASSWORD:?Set BOOTSTRAP_PASSWORD in .env}
+      OPENAI_API_KEY: ${OPENAI_API_KEY:-}
+      OPENAI_MODEL: ${OPENAI_MODEL:-}
       AUDIT_EXPORT_DIR: ./audit_exports
-      CORS_ORIGINS: http://localhost:3000,http://127.0.0.1:3000
+      CORS_ORIGINS: ${CORS_ORIGINS:-http://localhost:3000,http://127.0.0.1:3000}
+      SEED_ON_STARTUP: ${SEED_ON_STARTUP:-true}
     ports:
-      - "8000:8000"
+      - "127.0.0.1:8000:8000"
+    depends_on:
+      db:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8000/health')"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+
+  worker:
+    build: ./backend
+    command: ["python", "-m", "app.services.investigation_worker"]
+    environment: *backend_env
+    depends_on:
+      backend:
+        condition: service_healthy
+    restart: unless-stopped
 
   frontend:
     build:
       context: ./frontend
       dockerfile: Dockerfile
     environment:
-      NEXT_PUBLIC_API_BASE_URL: http://localhost:8000
+      BACKEND_URL: http://backend:8000
     depends_on:
-      - backend
+      backend:
+        condition: service_healthy
     ports:
-      - "3000:3000"
+      - "127.0.0.1:3000:3000"
+
+volumes:
+  postgres_data:

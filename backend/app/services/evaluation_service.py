@@ -37,7 +37,7 @@ def get_case_or_raise(db: Session, case_id: str) -> Case:
 def _reset_evaluation_artifacts(db: Session, case: Case) -> None:
     db.execute(delete(PolicyResult).where(PolicyResult.case_pk == case.id))
     db.execute(delete(GovernanceFlag).where(GovernanceFlag.case_pk == case.id))
-    db.execute(delete(HumanReview).where(HumanReview.case_pk == case.id))
+    db.execute(delete(HumanReview).where(HumanReview.case_pk == case.id, HumanReview.review_status == "pending"))
     db.execute(delete(RiskResult).where(RiskResult.case_pk == case.id))
 
 

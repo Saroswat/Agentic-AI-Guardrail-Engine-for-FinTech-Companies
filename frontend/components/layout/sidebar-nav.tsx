@@ -7,6 +7,7 @@ import { Activity, FileCheck2, LayoutDashboard, ListChecks, Shield, Sparkles, Wa
 import { cn } from "@/lib/utils";
 
 const navItems = [
+  { href: "/investigations", label: "Investigations", icon: Waypoints },
   { href: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
   { href: "/evaluation", label: "New Evaluation", icon: Sparkles },
   { href: "/audit", label: "Audit Log", icon: FileCheck2 },
