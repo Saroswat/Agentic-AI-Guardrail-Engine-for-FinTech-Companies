@@ -13,3 +13,11 @@ backend/dist
 frontend/.next
 frontend/out
 .env
+.env.local
+.local/
+*.db
+*.db-journal
+*.tsbuildinfo
+frontend/test-results/
+frontend/playwright-report/
+frontend/.next-e2e/

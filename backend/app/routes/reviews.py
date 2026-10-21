@@ -4,6 +4,8 @@ from sqlalchemy.orm import Session
 from app.core.database import get_db
 from app.schemas.reviews import PendingReviewItem, PendingReviewResponse, ReviewDecisionRequest, ReviewDecisionResponse
 from app.services.review_service import apply_review_decision, get_pending_reviews
+from app.core.auth import current_account
+from app.models.investigation import Account
 
 router = APIRouter(prefix="/reviews", tags=["reviews"])
 
@@ -29,7 +31,8 @@ def pending_reviews(db: Session = Depends(get_db)) -> PendingReviewResponse:
 
 
 @router.post("/{review_id}/decision", response_model=ReviewDecisionResponse)
-def review_decision(review_id: int, payload: ReviewDecisionRequest, db: Session = Depends(get_db)) -> ReviewDecisionResponse:
+def review_decision(review_id: int, payload: ReviewDecisionRequest, db: Session = Depends(get_db), account: Account = Depends(current_account)) -> ReviewDecisionResponse:
+    payload.reviewer_name = account.username
     try:
         review = apply_review_decision(db, review_id, payload)
     except ValueError as exc:

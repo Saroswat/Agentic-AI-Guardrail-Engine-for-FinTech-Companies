@@ -1,4 +1,41 @@
 # Agentic-AI Guardrail Engine for FinTech Companies
+
+## Governed investigation workspace
+
+The platform now includes authenticated analyst, reviewer and administrator roles, a durable investigation worker, versioned evidence snapshots, an optional live LLM tool loop, cited briefs, independent proposal review, and downloadable investigation reports.
+
+### Start on Windows
+
+```powershell
+.\Start-Platform.ps1
+```
+
+Open **http://127.0.0.1:3010/login**. Initial local credentials are generated in the ignored `.local/credentials.txt`; they are never committed. Sign in as `analyst` to investigate a seeded case, then as `reviewer` to approve or request changes. Use the Account page to change passwords or create individual team accounts.
+
+```powershell
+.\Stop-Platform.ps1
+```
+
+The launcher creates an isolated Python environment, installs missing dependencies, applies migrations, and starts the API, worker and frontend. Requirements: Python 3.11+, Node.js 22+, Git, and PowerShell 7. It binds services to loopback. Review the scripts before running them.
+
+### Docker / PostgreSQL
+
+Copy `.env.example` to `.env`, set the two passwords, then run:
+
+```sh
+docker compose up --build
+```
+
+Open http://localhost:3000/login. PostgreSQL data survives container replacement in a named volume. The worker is a separate service with restart recovery. Docker deployment is configured; see the runbook for hosting requirements.
+
+### Live investigations
+
+The offline mode is explicitly a deterministic demonstration. For real model investigations, set `OPENAI_API_KEY` and `OPENAI_MODEL` in `backend/.env` (or root `.env` for Compose), restart the API and worker, then select **Live LLM**. Keys remain server-side. No model is silently selected and no live calls are made in demo mode.
+
+The live provider can read only the current run's captured evidence. It cannot move money, change account records, or execute financial decisions. Review approval records an investigation outcome; it is not an external financial action.
+
+See [the architecture, API, operations and validation runbook](docs/investigations.md) for details and limitations. The original case-evaluation documentation follows below; protected APIs now require a signed-in session and deployment uses the newer instructions above.
+
 ## Governed Agentic AI Decision Control Platform
 
 A recruiter-grade full-stack web application that demonstrates how agentic AI can be used in financial workflows under deterministic governance, policy controls, explainability, auditability, and human oversight.

@@ -8,6 +8,7 @@ from fastapi.testclient import TestClient
 os.environ["DATABASE_URL"] = "sqlite:///./test_agentic_guardrail.db"
 os.environ["AUDIT_EXPORT_DIR"] = "./test_audit_exports"
 os.environ["SEED_ON_STARTUP"] = "false"
+os.environ["BOOTSTRAP_PASSWORD"] = "test-password-321!"
 
 from app.core.database import Base, SessionLocal, engine  # noqa: E402
 from app.main import app  # noqa: E402
@@ -17,10 +18,13 @@ from app.utils.demo_policies import build_policy_versions_seed  # noqa: E402
 
 @pytest.fixture(autouse=True)
 def reset_database():
+    from app.routes.investigations import _login_attempts
+    _login_attempts.clear()
     Base.metadata.drop_all(bind=engine)
     Base.metadata.create_all(bind=engine)
     yield
     Base.metadata.drop_all(bind=engine)
+    engine.dispose()
     db_path = Path("test_agentic_guardrail.db")
     if db_path.exists():
         db_path.unlink()
